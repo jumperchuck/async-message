@@ -1,0 +1,36 @@
+# OSX
+#
+.DS_Store
+
+# IDE
+#
+.idea/
+.gradle
+local.properties
+*.iml
+
+# VSCode
+#
+.vscode/
+.history/
+jsconfig.json
+
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Bundle artifact
+#
+*.jsbundle
+
+# Build
+#
+build/
+dist/
+
+# Test
+#
+coverage/
+tests/**/*.js
