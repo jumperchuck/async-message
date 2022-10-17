@@ -14,9 +14,6 @@ export const target = {
     },
   },
   getter: {},
-  caller: {
-
-  },
   emitter: new Emitter(),
 };
 

@@ -1,6 +1,7 @@
 {
   "name": "async-message",
-  "version": "0.0.1",
+  "private": true,
+  "version": "0.1.0",
   "description": "",
   "author": "Dennis Chuck",
   "license": "MIT",
@@ -9,38 +10,32 @@
   "types": "dist/core/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/core/index.js",
-      "require": "./dist/core/index.cjs.js",
+      "require": "./dist/core/index.js",
       "import": "./dist/core/index.es.js",
       "types": "./dist/core/index.d.ts"
     },
     "./core": {
-      "default": "./dist/core/index.js",
-      "require": "./dist/core/index.cjs.js",
+      "require": "./dist/core/index.js",
       "import": "./dist/core/index.es.js",
       "types": "./dist/core/index.d.ts"
     },
     "./electron": {
-      "default": "./dist/electron/index.js",
-      "require": "./dist/electron/index.cjs.js",
+      "require": "./dist/electron/index.js",
       "import": "./dist/electron/index.es.js",
       "types": "./dist/electron/index.d.ts"
     },
     "./node": {
-      "default": "./dist/node/index.js",
-      "require": "./dist/node/index.cjs.js",
+      "require": "./dist/node/index.js",
       "import": "./dist/node/index.es.js",
       "types": "./dist/node/index.d.ts"
     },
     "./serializer": {
-      "default": "./dist/serializer/index.js",
-      "require": "./dist/serializer/index.cjs.js",
+      "require": "./dist/serializer/index.js",
       "import": "./dist/serializer/index.es.js",
       "types": "./dist/serializer/index.d.ts"
     },
     "./web": {
-      "default": "./dist/web/index.js",
-      "require": "./dist/web/index.cjs.js",
+      "require": "./dist/web/index.js",
       "import": "./dist/web/index.es.js",
       "types": "./dist/web/index.d.ts"
     }
@@ -51,7 +46,11 @@
   },
   "homepage": "https://github.com/jumperchuck/async-message",
   "keywords": [
-    "message"
+    "message",
+    "thread",
+    "worker",
+    "worker_threads",
+    "channel"
   ],
   "scripts": {
     "build": "node ./scripts/build.js",
@@ -67,6 +66,7 @@
     "@types/node": "^18.8.3",
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "@typescript-eslint/parser": "^5.39.0",
+    "electron": "^21.1.1",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",

@@ -23,6 +23,8 @@ module.exports = {
       },
     },
   ],
-  rules: {},
+  rules: {
+    'no-case-declarations': 'off',
+  },
   settings: {},
 };

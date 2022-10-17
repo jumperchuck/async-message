@@ -3,7 +3,6 @@ module.exports = {
   setupFiles: ['jsdom-worker', './tests/setup.ts'],
   moduleNameMapper: {
     '^async-message$': '<rootDir>/src',
-    '^async-message/web$': '<rootDir>/src/web',
   },
   modulePathIgnorePatterns: ['dist'],
   transformIgnorePatterns: [],

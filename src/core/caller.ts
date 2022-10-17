@@ -8,16 +8,16 @@ export interface CallerMessage {
   args: any[];
 }
 
-export type GetCallerTarget<T> = T extends (...args: infer A) => infer R
+export type GetCallerTarget<T> = 0 extends 1 & T
+  ? any
+  : T extends (...args: infer A) => infer R
   ? R extends Promise<infer O>
     ? (...args: A) => Promise<O>
     : (...args: A) => Promise<R>
   : T extends Record<string, any>
-  ? {
+  ? (() => Promise<T>) & {
       [key in keyof T]: GetCallerTarget<T[key]>;
     }
-  : T extends any
-  ? any
   : () => Promise<T>;
 
 export const caller = <T = any>(
@@ -43,7 +43,6 @@ export const caller = <T = any>(
             channel.removeAllListeners(`resolve-${id}`);
             channel.removeAllListeners(`reject-${id}`);
           }, timeout);
-          channel.postMessage(msg);
           channel.on(`resolve-${id}`, (data) => {
             clearTimeout(timer);
             resolve(data);
@@ -52,6 +51,7 @@ export const caller = <T = any>(
             clearTimeout(timer);
             reject(err);
           });
+          channel.postMessage(msg);
         });
       },
       {
@@ -70,7 +70,7 @@ export const caller = <T = any>(
     channel.removeAllListeners(`reject-${id}`);
   });
 
-  channel.removeListener('producer-error', ({ id, error }) => {
+  channel.addListener('producer-error', ({ id, error }) => {
     channel.emit(`reject-${id}`, error);
     channel.removeAllListeners(`resolve-${id}`);
     channel.removeAllListeners(`reject-${id}`);

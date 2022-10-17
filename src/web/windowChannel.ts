@@ -5,7 +5,7 @@ export class WindowChannel extends Channel {
   private targetOrigin: string;
 
   constructor(targetOrigin?: string);
-  constructor(win: Window, targetOrigin: string);
+  constructor(win: Window, targetOrigin?: string);
   constructor(winOrTargetOrigin?: Window | string, targetOrigin = location.origin) {
     super();
     this.win = typeof winOrTargetOrigin === 'object' ? winOrTargetOrigin : undefined;

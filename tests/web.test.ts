@@ -7,7 +7,7 @@ import { WindowChannel, WorkerChannel } from 'async-message/web';
 import { targetTest } from './case';
 import { createServer } from './server';
 
-describe('async message for web test', () => {
+describe('for web worker', () => {
   const code = readFileSync(
     resolve(__dirname, './producers/producer.web.worker.js'),
     'utf-8',
@@ -15,13 +15,20 @@ describe('async message for web test', () => {
   const worker = new Worker(URL.createObjectURL(new Blob([code])));
   const channel = new WorkerChannel(worker);
 
-  it('main thread call worker thread', async () => {
-    await targetTest(channel);
-  });
+  targetTest(() => channel);
 });
 
-describe('async message for iframe test', () => {
-  const html = readFileSync(resolve(__dirname, './iframe/parent.html'), 'utf-8');
+describe('for iframe window', () => {
+  const html = `
+<!doctype html>
+<html>
+<body>
+  <iframe src="http://localhost/tests/child.html"></iframe>
+</body>
+<script>
+  window.childWindow = window.open('http://localhost/tests/child.html');
+</script>
+</html>`;
 
   const waitIFrameComplete = () => {
     const iframe = document.querySelector('iframe');
@@ -39,18 +46,27 @@ describe('async message for iframe test', () => {
     });
   };
 
-  beforeEach(async () => {
+  let channel: WindowChannel;
+
+  beforeAll(async () => {
     createServer(80);
     document.body.innerHTML = html;
     await waitIFrameComplete();
-  });
-
-  it('test', async () => {
     const iframe = document.querySelector('iframe');
-    const channel = new WindowChannel(iframe!.contentWindow!, '*');
-
-    expect(iframe).toBeTruthy();
-
-    await targetTest(channel);
+    channel = new WindowChannel(iframe!.contentWindow!, '*');
   });
+
+  targetTest(() => channel);
 });
+
+// TODO: jest不支持window.open，考虑使用webdriver?
+// describe('for open window', () => {
+//   let channel: WindowChannel;
+//
+//   beforeAll(async () => {
+//     const child = window.open('http://localhost/tests/child.html');
+//     channel = new WindowChannel(child, '*');
+//   });
+//
+//   targetTest(() => channel);
+// });

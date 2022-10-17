@@ -32,6 +32,9 @@ const emitter = new Emitter();
 
 const callbacks: RegisterCallback[] = [];
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
+
 const execute = (message: Message) => {
   const { __type, id, args } = message;
   if (__type === 'callback-execute') {
@@ -87,8 +90,6 @@ export const callbackSerializer: Serializer = {
     if (isCallbackMessage(value)) {
       const { __type, id } = value;
       switch (__type) {
-        case 'callback':
-          return () => {};
         case 'callback-register':
           const callback = (...args: any[]) => {
             const message: CallbackMessage = {
@@ -106,9 +107,10 @@ export const callbackSerializer: Serializer = {
             unregisterCallback(register.originalFn);
             return register.originalFn;
           }
-          return () => {};
+          return noop;
         case 'callback-execute':
-          return () => {};
+        case 'callback':
+          return noop;
       }
     }
     fallback(value);

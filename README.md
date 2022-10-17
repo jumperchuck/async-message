@@ -19,6 +19,7 @@ pnpm install async-message
 - 多平台支持，`web` / `node` / `electron`
 - 接口适配，自定义不同场景
 - 完美支持`Typescript`
+- 自定义序列化/反序列化插件
 
 ## 快速开始
 
