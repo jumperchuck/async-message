@@ -23,6 +23,8 @@ pnpm install async-message
 
 ## 快速开始
 
+---
+
 ### 例子
 
 ```tsx
@@ -65,7 +67,6 @@ const counter = {
 producer(channel, counter);
 
 export type Counter = typeof counter;
-
 ```
 
 在web worker例子中，主线程调用工作线程导出的counter
@@ -77,7 +78,7 @@ export type Counter = typeof counter;
 
 负责`发送消息` / `接受消息` / `广播消息`，`channel`继承`emitter`
 
-### caller(channel)
+### caller(channel, timeout)
 
 负责通过`channel`代理对worker中producer目标的调用，所有方法均返回一个`promise`
 
@@ -86,6 +87,8 @@ export type Counter = typeof counter;
 负责通过`channel`导出`target`给其他`caller`调用
 
 ## 平台
+
+---
 
 ### Web
 
@@ -131,17 +134,70 @@ new WorkerChannel();
 
 ```tsx
 import { IpcChannel } from 'async-message/electron';
+
+// for main 主线程
+new IpcChannel();
+// for renderer 渲染线程
+new IpcChannel();
 ```
 
 ## 序列化
 
-```tsx
-import { callbackSerializer, registerCallback, unregisterCallback } from 'async-message/serializer'
+---
 
-channel.registerSerializer(callbackSerializer);
+### 回调函数
+
+数据传递的时候函数无法被序列化，需要一些额外的手段来传递回调函数，通过`callbackSerializer`赋予`channel`序列化/反序列化函数的能力
+
+需要在传递函数的时候注册用`registerCallback`包裹，注销的时候用`unregisterCallback`包裹，否则此函数会常驻于内存
+
+```tsx
+// master.ts
+import { caller } from 'async-message';
+import { WorkerChannel } from 'async-message/web';
+import { callbackSerializer, registerCallback, unregisterCallback } from 'async-message/serializer'
+import type { Target } from './workers/target';
+
+const worker = new Worker('./workers/target');
+
+const channel = new WorkerChannel(worker);
+channel.registerSerializer(callbackSerializer); // 这一步是必须的
+
+const target = caller<Target>(channel);
+
+const callback = () => {};
+
+await target.addEventListener('test', registerCallback(callback));
+
+await target.removeEventListener('test', unregisterCallback(callback));
+```
+
+```tsx
+// workers/target.ts
+import { producer } from 'async-message';
+import { WorkerChannel } from 'async-message/web';
+import { callbackSerializer } from 'async-message/serializer'
+
+const channel = new WorkerChannel();
+channel.registerSerializer(callbackSerializer); // 这一步是必须的
+
+const target = {
+  addEventListener(type: string, listener: (...args: any[]) => void) {
+    // do something
+  },
+  removeEventListener(type: string, listener: (...args: any[]) => void) {
+    // do something
+  }
+}
+
+producer(channel, target);
+
+export type Target = typeof counter;
 ```
 
 ## 高级用法
+
+---
 
 ### 自定义channel
 
