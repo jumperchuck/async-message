@@ -2,7 +2,7 @@
   "name": "async-message",
   "private": true,
   "version": "0.1.0",
-  "description": "",
+  "description": "Call another threads as simple as a function call",
   "author": "Dennis Chuck",
   "license": "MIT",
   "main": "dist/core/index.js",
