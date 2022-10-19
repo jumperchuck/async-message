@@ -1,5 +1,9 @@
 import { caller, Channel } from 'async-message';
-import {callbackSerializer, registerCallback, unregisterCallback} from 'async-message/serializer';
+import {
+  callbackSerializer,
+  registerCallback,
+  unregisterCallback,
+} from 'async-message/serializer';
 import { Target } from './producers/target';
 
 export const targetTest = (getChannel: () => Channel) => {
@@ -28,9 +32,9 @@ export const targetTest = (getChannel: () => Channel) => {
 
     const fn = jest.fn();
     await target.emitter.on('test', registerCallback(fn));
-    await target.emitter.emit('test', 1, 2, 3);
+    await target.emitter.emit('test', 1, {}, ['1']);
     expect(fn).toBeCalledTimes(1);
-    expect(fn).toBeCalledWith(1, 2, 3);
+    expect(fn).toBeCalledWith(1, {}, ['1']);
 
     await target.emitter.off('test', unregisterCallback(fn));
     await target.emitter.emit('test', 2);
@@ -40,7 +44,7 @@ export const targetTest = (getChannel: () => Channel) => {
   it('operation timed out', async () => {
     const channel = new (class extends Channel {
       postMessage() {
-        console.log('post');
+        // post message
       }
     })();
     const target = caller(channel, 2000);
