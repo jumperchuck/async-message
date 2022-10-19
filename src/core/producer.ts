@@ -1,4 +1,5 @@
 import { Channel } from './channel';
+import { getValue } from './util';
 
 export interface ProducerMessage {
   __type: 'producer-data' | 'producer-error';
@@ -7,28 +8,10 @@ export interface ProducerMessage {
   error?: any;
 }
 
-const getValue = (obj: any, path: unknown) => {
-  if (typeof obj !== 'object' || obj === null) {
-    return obj;
-  }
-  if (typeof path === 'number') {
-    return obj[path];
-  }
-  if (typeof path === 'string') {
-    if (Object.prototype.hasOwnProperty.call(obj, path)) {
-      return obj[path];
-    }
-    return path.split('.').reduce((acc, item) => (acc ? acc[item] : undefined), obj);
-  }
-  if (Array.isArray(path)) {
-    return path.reduce((acc, item) => (acc ? acc[item] : undefined), obj);
-  }
-  return undefined;
-};
-
 export const producer = <T>(channel: Channel, target: T) => {
   channel.addListener('caller', async (message, poster) => {
     const { id, property, args } = message;
+
     try {
       const value = getValue(target, property);
       if (typeof value === 'function') {
@@ -36,19 +19,19 @@ export const producer = <T>(channel: Channel, target: T) => {
           getValue(target, property.split('.').slice(0, -1).pop()) || target;
         const data = await value.apply(
           receiver,
-          args.map((item: any) => channel.deserialize(item, poster || channel)),
+          args.map((item: any) => channel.deserialize(item, poster)),
         );
         const msg: ProducerMessage = {
           __type: 'producer-data',
           id,
-          data,
+          data: channel.serialize(data, poster),
         };
         poster?.postMessage?.(msg) || channel.postMessage(msg);
       } else {
         const msg: ProducerMessage = {
           __type: 'producer-data',
           id,
-          data: value,
+          data: channel.serialize(value, poster),
         };
         poster?.postMessage?.(msg) || channel.postMessage(msg);
       }

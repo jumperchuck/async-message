@@ -1,43 +1,43 @@
 {
   "name": "async-message",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Call another threads as simple as a function call",
   "author": "Dennis Chuck",
   "license": "MIT",
-  "main": "dist/core/index.js",
-  "module": "dist/core/index.es.js",
-  "types": "dist/core/index.d.ts",
+  "main": "core/index.js",
+  "module": "core/index.es.js",
+  "types": "core/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/core/index.js",
-      "import": "./dist/core/index.es.js",
-      "types": "./dist/core/index.d.ts"
+      "require": "./core/index.js",
+      "import": "./core/index.es.js",
+      "types": "./core/index.d.ts"
     },
     "./core": {
-      "require": "./dist/core/index.js",
-      "import": "./dist/core/index.es.js",
-      "types": "./dist/core/index.d.ts"
+      "require": "./core/index.js",
+      "import": "./core/index.es.js",
+      "types": "./core/index.d.ts"
     },
     "./electron": {
-      "require": "./dist/electron/index.js",
-      "import": "./dist/electron/index.es.js",
-      "types": "./dist/electron/index.d.ts"
+      "require": "./electron/index.js",
+      "import": "./electron/index.es.js",
+      "types": "./electron/index.d.ts"
     },
     "./node": {
-      "require": "./dist/node/index.js",
-      "import": "./dist/node/index.es.js",
-      "types": "./dist/node/index.d.ts"
+      "require": "./node/index.js",
+      "import": "./node/index.es.js",
+      "types": "./node/index.d.ts"
     },
     "./serializer": {
-      "require": "./dist/serializer/index.js",
-      "import": "./dist/serializer/index.es.js",
-      "types": "./dist/serializer/index.d.ts"
+      "require": "./serializer/index.js",
+      "import": "./serializer/index.es.js",
+      "types": "./serializer/index.d.ts"
     },
     "./web": {
-      "require": "./dist/web/index.js",
-      "import": "./dist/web/index.es.js",
-      "types": "./dist/web/index.d.ts"
+      "require": "./web/index.js",
+      "import": "./web/index.es.js",
+      "types": "./web/index.d.ts"
     }
   },
   "repository": {
@@ -55,7 +55,7 @@
   "scripts": {
     "build": "node ./scripts/build.js",
     "build:test": "node ./scripts/buildTest.js",
-    "test": "npm run build:test && jest",
+    "test": "npm run build && npm run build:test && jest",
     "test:c": "jest --coverage"
   },
   "devDependencies": {

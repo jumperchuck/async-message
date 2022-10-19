@@ -36,7 +36,7 @@ export const caller = <T = any>(
             __type: 'caller',
             id,
             property,
-            args: args.map((item) => channel.serialize(item, channel)),
+            args: args.map((item) => channel.serialize(item)),
           };
           const timer = setTimeout(() => {
             reject(new Error('timeout'));
@@ -65,7 +65,7 @@ export const caller = <T = any>(
     );
 
   channel.addListener('producer-data', ({ id, data }) => {
-    channel.emit(`resolve-${id}`, data);
+    channel.emit(`resolve-${id}`, channel.deserialize(data));
     channel.removeAllListeners(`resolve-${id}`);
     channel.removeAllListeners(`reject-${id}`);
   });
