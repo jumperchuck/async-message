@@ -15,6 +15,9 @@ export const getValue = (obj: any, path: unknown) => {
     if (Object.prototype.hasOwnProperty.call(obj, path)) {
       return obj[path];
     }
+    if (path.length <= 0) {
+      return obj;
+    }
     return path.split('.').reduce((acc, item) => (acc ? acc[item] : undefined), obj);
   }
   if (Array.isArray(path)) {

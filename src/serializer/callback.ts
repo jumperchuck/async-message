@@ -89,8 +89,12 @@ export const callbackSerializer: Serializer = {
   deserialize(value: unknown, fallback: (value: unknown) => any, poster: Poster): any {
     if (isCallbackMessage(value)) {
       const { __type, id } = value;
+      const register = callbacks.find((item) => item.id === id);
       switch (__type) {
         case 'callback-register':
+          if (register) {
+            return register.originalFn;
+          }
           const callback = (...args: any[]) => {
             const message: CallbackMessage = {
               __type: 'callback-execute',
@@ -102,7 +106,6 @@ export const callbackSerializer: Serializer = {
           registerCallback(callback);
           return callback;
         case 'callback-unregister':
-          const register = callbacks.find((item) => item.id === id);
           if (register) {
             unregisterCallback(register.originalFn);
             return register.originalFn;
