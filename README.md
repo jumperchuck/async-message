@@ -23,8 +23,6 @@ pnpm install async-message
 
 ## 快速开始
 
----
-
 ### 例子
 
 ```tsx
@@ -88,8 +86,6 @@ export type Counter = typeof counter;
 
 ## 平台
 
----
-
 ### Web
 
 ```tsx
@@ -143,8 +139,6 @@ new IpcChannel();
 
 ## 序列化
 
----
-
 ### 回调函数
 
 数据传递的时候函数无法被序列化，需要一些额外的手段来传递回调函数，通过`callbackSerializer`赋予`channel`序列化/反序列化函数的能力
@@ -194,10 +188,9 @@ producer(channel, target);
 
 export type Target = typeof counter;
 ```
+> `callbackSerializer`会遍历所有数据字段，如果传递的数据量太大，请自定义serializer
 
 ## 高级用法
-
----
 
 ### 自定义channel
 
