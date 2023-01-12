@@ -15,8 +15,7 @@ export const producer = <T>(channel: Channel, target: T) => {
     try {
       const value = getValue(target, property);
       if (typeof value === 'function') {
-        const receiver =
-          getValue(target, property.split('.').slice(0, -1).pop()) || target;
+        const receiver = getValue(target, property.split('.').slice(0, -1)) || target;
         const data = await value.apply(
           receiver,
           args.map((item: any) => channel.deserialize(item, poster)),
@@ -26,14 +25,14 @@ export const producer = <T>(channel: Channel, target: T) => {
           id,
           data: channel.serialize(data, poster),
         };
-        poster?.postMessage?.(msg) || channel.postMessage(msg);
+        poster ? poster.postMessage(msg) : channel.postMessage(msg);
       } else {
         const msg: ProducerMessage = {
           __type: 'producer-data',
           id,
           data: channel.serialize(value, poster),
         };
-        poster?.postMessage?.(msg) || channel.postMessage(msg);
+        poster ? poster.postMessage(msg) : channel.postMessage(msg);
       }
     } catch (error) {
       const msg: ProducerMessage = {
@@ -41,7 +40,7 @@ export const producer = <T>(channel: Channel, target: T) => {
         id,
         error,
       };
-      poster?.postMessage?.(msg) || channel.postMessage(msg);
+      poster ? poster.postMessage(msg) : channel.postMessage(msg);
     }
   });
 

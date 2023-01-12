@@ -39,7 +39,7 @@ export const caller = <T = any>(
             args: args.map((item) => channel.serialize(item)),
           };
           const timer = setTimeout(() => {
-            reject(new Error('timeout'));
+            reject(new Error(`async-message call ${property} timeout`));
             channel.removeAllListeners(`resolve-${id}`);
             channel.removeAllListeners(`reject-${id}`);
           }, timeout);
